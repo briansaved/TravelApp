@@ -20,13 +20,13 @@ const retrieveData = async (url = "") => {
 
 document.getElementById("generate").addEventListener("click", sendRequest);
 
-//offcial request sent on click of generate button
+//offcial request sent on click of generate buttons
 function sendRequest(e) {
   const newCity = document.getElementById("zip").value;
   let mood = document.getElementById("feelings").value;
 
   newCity == "" || mood == ""
-    ? alert(`Please fill in all fields`)
+    ? alert(`Please fill in all fields!`)
     : retrieveData(baseUrl + newCity + apiKey)
         .then(function (data) {
           postData("/data", {
