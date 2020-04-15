@@ -32,7 +32,7 @@ function sendRequest(e) {
           postData("/data", {
             Temprature: data.main.temp,
             Date: newDate,
-            mood,
+            mood: mood,
           });
         })
         .then(function () {
