@@ -35,7 +35,6 @@ app.post("/data", (req, res) => {
   projectData.temp = req.body.Temprature;
   projectData.date = req.body.Date;
   projectData.mood = req.body.mood;
-  console.log("POST COMPLETE");
   res.send(projectData);
   return projectData;
 });
