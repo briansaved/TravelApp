@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 // Start up an instance of app bc
 const app = express();
@@ -18,7 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Initialize the main project folder bc
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "../client")));
 
 // Setup Server - use dynamic port if set else 8080 bc
 let port = process.env.PORT || 8080;
@@ -28,7 +29,8 @@ app.listen(port, () => {
 
 //server to send Webpack produced file as home bc
 app.get("/", (req, res) => {
-  res.sendFile("dist/index.html");
+  // res.sendFile(path.resolve("src/client/views/index.html"));
+  res.sendFile(path.join(__dirname, "../client/views/index.html"));
 });
 
 app.post("/data", (req, res) => {

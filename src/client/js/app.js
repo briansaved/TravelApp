@@ -1,11 +1,11 @@
 /* Global Variables */
 
 // Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+// let d = new Date();
+// let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
 
-const apiKey = `&APPID=4f2ae032089f5dece0abe5982bc51612`;
-const baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=`;
+// const apiKey = `&APPID=4f2ae032089f5dece0abe5982bc51612`;
+// const baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=`;
 
 //MAKES async fetch request to openweather api
 const retrieveData = async (url = "") => {
@@ -14,7 +14,7 @@ const retrieveData = async (url = "") => {
     let cityData = await request.json();
     //Validate that the City Entered is Valid
     cityData.cod == "404" //Valid cod is 200
-      ? alert("Please Enter a valid Location")
+      ? (alert("Please Enter a valid Location"), listener())
       : console.log(cityData);
     return cityData;
   } catch (error) {
@@ -22,15 +22,25 @@ const retrieveData = async (url = "") => {
   }
 };
 
-document.getElementById("generate").addEventListener("click", sendRequest);
+let listener = () => {
+  document.getElementById("generate").addEventListener("click", sendRequest);
+};
 
+listener();
 //offcial request sent on click of generate buttons
 function sendRequest(e) {
+  //disable the event listener whilst data is being retrieved
+  document.getElementById("generate").removeEventListener("click", sendRequest);
   const newCity = document.getElementById("zip").value;
   let mood = document.getElementById("feelings").value;
+  let d = new Date();
+  let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+
+  const apiKey = `&APPID=4f2ae032089f5dece0abe5982bc51612`;
+  const baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=`;
 
   newCity == "" || mood == ""
-    ? alert(`Please fill in all fields!`)
+    ? (alert(`Please fill in all fields!`), listener()) //reinstate lister
     : retrieveData(baseUrl + newCity + apiKey)
         .then(async function (data) {
           await postData("/data", {
@@ -72,7 +82,10 @@ let updateUi = async () => {
     document.getElementById("date").innerHTML = allData.date;
     document.getElementById("temp").innerHTML = allData.temp;
     document.getElementById("content").innerHTML = allData.mood;
+    listener(); //reinstate listener once data is displayed
   } catch (error) {
     console.log(`OOPSIE: ${error}`);
   }
 };
+
+export { retrieveData, sendRequest, updateUi, postData, listener };
