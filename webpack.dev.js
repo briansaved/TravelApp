@@ -23,12 +23,12 @@ module.exports = {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
-      /* {
-        test: /\.html$/i,     
-        use: ["html-loader"], //could be causing errors
-      },*/
       {
-        test: /\.(svg|jpe?g|gif|png)$/i,
+        test: /\.html$/i,
+        use: ["html-loader"], //could be causing errors
+      },
+      {
+        test: /\.(svg|jpe?g|gif|png)$/,
         use: {
           loader: "file-loader",
           options: {

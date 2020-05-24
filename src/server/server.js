@@ -19,10 +19,11 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Initialize the main project folder bc
-app.use(express.static(path.join(__dirname, "../client")));
+// app.use(express.static(path.join(__dirname, "../client"))); //non WP
+app.use(express.static("dist")); //WP
 
 // Setup Server - use dynamic port if set else 8080 bc
-let port = process.env.PORT || 8080;
+let port = process.env.PORT || 8083;
 app.listen(port, () => {
   console.log(`Server up and Running on Port: ${port}`);
 });
@@ -30,7 +31,7 @@ app.listen(port, () => {
 //server to send Webpack produced file as home bc
 app.get("/", (req, res) => {
   // res.sendFile(path.resolve("src/client/views/index.html"));
-  res.sendFile(path.join(__dirname, "../client/views/index.html"));
+  res.sendFile("./index.html");
 });
 
 app.post("/data", (req, res) => {
