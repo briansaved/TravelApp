@@ -9,16 +9,25 @@ let getImage = async (city, country) => {
   console.log(baseUrl + api_Key + city + options);
   let image = await fetch(baseUrl + api_Key + city + options);
   let imageFallback;
-  console.log("image before try block is ", image);
+
   try {
     let picData = await image.json();
-    picData.hits.length === 0
-      ? ((imageFallback = await fetch(baseUrl + api_Key + country + options)),
-        (picData = await imageFallback.json()))
-      : (imageFallback = "");
-    console.log("the raw pic data is ", picData);
-    console.log(picData.hits[0].webformatURL);
-    return picData.hits[0].webformatURL;
+    if (picData.hits.length == 0) {
+      imageFallback = await fetch(baseUrl + api_Key + country + options);
+
+      try {
+        picData = await imageFallback.json();
+        return picData.hits[0].webformatURL;
+      } catch (err) {
+        console.log("OOPSIE : ", err);
+      }
+      return picData.hits[0].webformatURL;
+    } else {
+      imageFallback = "";
+      console.log("the raw pic data is ", picData);
+      console.log(picData.hits[0].webformatURL);
+      return picData.hits[0].webformatURL;
+    }
   } catch (err) {
     console.log("OOPSIE :", err);
   }

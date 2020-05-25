@@ -93,6 +93,12 @@ let updateUi = async () => {
     let cityImage = await Client.getImage(allData.city, allData.country);
     console.log("The image url in UI is ", cityImage);
 
+    let img = document.createElement("img");
+    img.setAttribute("src", cityImage);
+    img.setAttribute("width", "100%");
+    let cityPhoto = document.getElementById("cityImage");
+    cityPhoto.appendChild(img);
+
     document.getElementById("city").innerHTML =
       "Enjoy Your Visit to   " + allData.city;
     document.getElementById("days").innerHTML =
@@ -104,4 +110,7 @@ let updateUi = async () => {
     console.log(`OOPSIE: ${error}`);
   }
 };
+document.getElementById("print").addEventListener("click", (e) => {
+  window.print();
+});
 export { sendRequest };

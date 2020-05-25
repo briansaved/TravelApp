@@ -23,9 +23,9 @@ app.use(cors());
 app.use(express.static("dist")); //WP
 
 // Setup Server - use dynamic port if set else 8080 bc
-let port = process.env.PORT || 8083;
+let port = 8083;
 app.listen(port, () => {
-  console.log(`Server up and Running on Port: ${port}`);
+  console.log("Server up and Running on Port 8083");
 });
 
 //server to send Webpack produced file as home bc
