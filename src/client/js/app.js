@@ -1,44 +1,65 @@
 /* Global Variables */
+let departureValue;
 
 //MAKES async fetch request to openweather api
 const retrieveData = async (url = "") => {
   const request = await fetch(url);
   try {
     let cityData = await request.json();
+    console.log(cityData);
     //Validate that the City Entered is Valid
-    cityData.cod == "404" //Valid cod is 200
-      ? (alert("Please Enter a valid Location"), listener(e))
-      : console.log(cityData);
+    cityData.geonames.length == 0 //Validate City Name
+      ? (alert("Please Enter a valid Location"), listener())
+      : console.log(`${cityData.geonames[0].countryName}
+      ${cityData.geonames[0].lat}
+      ${cityData.geonames[0].lng}
+      ${cityData.geonames[0].name}`);
     return cityData;
   } catch (error) {
     console.log("opps: There is an error ", error);
   }
 };
 
-listener(e);
+let listener = () => {
+  document.getElementById("generate").addEventListener("click", sendRequest);
+};
+
+listener();
 //offcial request sent on click of generate buttons
-function sendRequest(e) {
+function sendRequest() {
   //disable the event listener whilst data is being retrieved
-  unlisten(e);
+  Client.unlisten();
   const newCity = document.getElementById("zip").value;
-  let mood = document.getElementById("feelings").value;
-  let d = new Date();
-  let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+  let departure = document.getElementById("tripDate").value; //only eval after click
+  departureValue = departure; //Set Global Variable for days to go
 
-  const apiKey = `&APPID=4f2ae032089f5dece0abe5982bc51612`;
-  const baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=`;
+  const apiKey = `briansaved`;
+  const baseUrl = `http://api.geonames.org/searchJSON?q=`;
+  let options = `&maxRows=10&username=`; //max of 10 result in the Array
+  //format is http://api.geonames.org/searchJSON?q=london&maxRows=10&username=demo
 
-  newCity == "" || mood == ""
-    ? (alert(`Please fill in all fields!`), listener(e)) //reinstate lister
-    : retrieveData(baseUrl + newCity + apiKey)
+  newCity == "" || departure == ""
+    ? (alert(`Please fill in all fields!`), listener()) //reinstate lister
+    : retrieveData(baseUrl + newCity + options + apiKey)
         .then(async function (data) {
           await postData("/data", {
-            Temprature: data.main.temp,
-            Date: newDate,
-            mood: mood,
+            country: data.geonames[0].countryName,
+            lat: data.geonames[0].lat,
+            long: data.geonames[0].lng,
+            city: data.geonames[0].name,
+            dep: departure,
           });
+          let finalWeather = await Client.getWeather(
+            data.geonames[0].lat,
+            data.geonames[0].lng
+          );
+          return finalWeather;
         })
-        .then(function (res) {
+        .then(async function (weather) {
+          console.log("Forecast before UI ", weather);
+          await postData("/more", {
+            weather: weather.data, //only posting the array with forecast
+          });
           updateUi();
         });
 }
@@ -63,16 +84,24 @@ let postData = async (url = "", data = {}) => {
 };
 
 let updateUi = async () => {
+  let daysValue = Client.days(departureValue);
+
   const request = await fetch("/all");
   try {
     let allData = await request.json();
-    console.log(allData);
+    console.log("all data from server is ", allData);
+    let cityImage = await Client.getImage(allData.city, allData.country);
+    console.log("The image url in UI is ", cityImage);
 
-    document.getElementById("date").innerHTML = allData.date;
-    document.getElementById("temp").innerHTML = allData.temp;
-    document.getElementById("content").innerHTML = allData.mood;
-    listener(e); //reinstate listener once data is displayed
+    document.getElementById("city").innerHTML =
+      "Enjoy Your Visit to   " + allData.city;
+    document.getElementById("days").innerHTML =
+      "There are Less Than " + daysValue + " Days Till you leave";
+    document.getElementById("temp").innerHTML =
+      allData.weather[daysValue].temp + " Degrees Celcius on Arrival";
+    listener(); //reinstate listener once data is displayed
   } catch (error) {
     console.log(`OOPSIE: ${error}`);
   }
 };
+export { sendRequest };

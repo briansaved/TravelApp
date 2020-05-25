@@ -35,18 +35,21 @@ app.get("/", (req, res) => {
 });
 
 app.post("/data", (req, res) => {
-  projectData.temp = req.body.Temprature;
-  projectData.date = req.body.Date;
-  projectData.mood = req.body.mood;
+  projectData.country = req.body.country;
+  projectData.city = req.body.city;
+  projectData.lat = req.body.lat;
+  projectData.long = req.body.long;
+  projectData.dep = req.body.dep;
+  // console.log(projectData);
   res.send(projectData);
   return projectData;
 });
 
-function cityWeather(req, res) {
-  projectData.temp = req.body.Temprature;
-  projectData.date = req.body.Date;
-  projectData.mood = req.body.mood;
-
+function cityInfo(req, res) {
+  projectData.country = req.body.country;
+  projectData.city = req.body.city;
+  projectData.lat = req.body.lat;
+  projectData.long = req.body.long;
   res.send(projectData);
   // return projectData;
 }
@@ -54,6 +57,13 @@ function cityWeather(req, res) {
 app.get("/all", getData);
 
 function getData(req, res) {
-  console.log(projectData);
+  // console.log(projectData);
   res.send(projectData);
 }
+
+app.post("/more", (req, res) => {
+  projectData.weather = req.body.weather;
+  // console.log(projectData);
+  res.send(projectData);
+  return projectData;
+});

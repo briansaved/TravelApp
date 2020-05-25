@@ -8,7 +8,7 @@ body {
   grid-auto-rows: minmax(150px, auto);
   /* grid-template-columns:  */
   /* height: 100vh; */
-  background: #f23557;
+  background: hsl(0, 1%, 50%);
   color: #f0d43a;
   justify-content: center;
   grid-gap: 1em;
@@ -27,13 +27,13 @@ body {
   /* margin: auto; */
 }
 
-#date {
+#city {
+}
+
+#days {
 }
 
 #temp {
-}
-
-#content {
 }
 
 .headline {
@@ -72,7 +72,7 @@ h1 {
   font-size: 36px;
 }
 
-textarea {
+.myInput {
   background: #22b2da;
   color: #f0d43a;
   font-size: 20px;
@@ -81,7 +81,6 @@ textarea {
 /* Reset style for HTML element on active to have no border*/
 input:focus,
 select:focus,
-textarea:focus,
 button:focus {
   outline: none;
 }
