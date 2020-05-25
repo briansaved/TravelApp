@@ -1,5 +1,5 @@
-import { cityInfo } from "./server.js";
+import { getData } from "./server";
 
 test("CitiInfo to be undefined", () => {
-  expect(citiInfo()).toBeUndefined();
+  expect(getData).toBeUndefined();
 });
